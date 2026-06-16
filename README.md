@@ -39,6 +39,27 @@ The API health check will be available at:
 GET /health
 ```
 
+### Authentication
+
+The administrator user is created by the initial seed:
+
+```text
+email: admin@futstats.com
+password: admin123
+```
+
+Login route:
+
+```text
+POST /auth/login
+```
+
+Authenticated routes must use:
+
+```text
+Authorization: Bearer <token>
+```
+
 ## Git Workflow
 
 Suggested branches:
@@ -53,4 +74,5 @@ Commit messages should be written in English, for example:
 
 ```text
 chore: create initial backend structure
+feat: add JWT authentication
 ```
