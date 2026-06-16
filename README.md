@@ -1,1 +1,56 @@
-# FutStats---Prog-III-Final-Project
+# FutStats
+
+FutStats is a web application for managing round-robin football championships.
+
+This repository is organized for the final Programming III project and will be
+developed in small feature branches with clear commits.
+
+## Stack
+
+- Node.js
+- Express
+- Sequelize
+- PostgreSQL
+- Docker Compose
+- Jest
+- React and Vite, planned for the frontend stage
+
+## Backend
+
+The backend lives in `backend/` and follows a layered architecture:
+
+```text
+Controller -> Service -> Repository -> Model -> Database
+```
+
+### Initial Setup
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+docker compose up -d
+npm run dev
+```
+
+The API health check will be available at:
+
+```text
+GET /health
+```
+
+## Git Workflow
+
+Suggested branches:
+
+```text
+main
+develop
+gustavo/project-setup
+```
+
+Commit messages should be written in English, for example:
+
+```text
+chore: create initial backend structure
+```
