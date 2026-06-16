@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+const env = require('../config/env');
 const AppError = require('../utils/AppError');
 
 function authMiddleware(request, response, next) {
@@ -16,7 +17,7 @@ function authMiddleware(request, response, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'change_me');
+    const decoded = jwt.verify(token, env.jwt.secret);
 
     request.user = {
       id: decoded.id,

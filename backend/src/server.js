@@ -1,7 +1,6 @@
 const app = require('./app');
+const env = require('./config/env');
 
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  console.log(`FutStats API running on port ${port}`);
+app.listen(env.app.port, () => {
+  console.log(`FutStats API running on port ${env.app.port}`);
 });

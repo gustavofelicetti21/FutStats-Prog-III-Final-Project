@@ -1,11 +1,11 @@
-require('dotenv').config();
+const env = require('./env');
 
 module.exports = {
-  username: process.env.DB_USER || 'futstats',
-  password: process.env.DB_PASSWORD || 'futstats',
-  database: process.env.DB_NAME || 'futstats',
-  host: process.env.DB_HOST || 'localhost',
-  port: Number(process.env.DB_PORT) || 5432,
+  username: env.database.user,
+  password: env.database.password,
+  database: env.database.name,
+  host: env.database.host,
+  port: env.database.port,
   dialect: 'postgres',
   define: {
     underscored: true,
