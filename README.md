@@ -23,17 +23,73 @@ The backend lives in `backend/` and follows a layered architecture:
 Controller -> Service -> Repository -> Model -> Database
 ```
 
-### Initial Setup
+### Environment Variables
+
+Create a local environment file from the example:
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Default database values:
+
+```text
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=futstats
+DB_USER=futstats
+DB_PASSWORD=futstats
+```
+
+### Install Dependencies
 
 ```bash
 cd backend
 npm install
-cp .env.example .env
+```
+
+### Start PostgreSQL
+
+```bash
+cd backend
 docker compose up -d
+```
+
+The Docker database uses:
+
+```text
+database: futstats
+user: futstats
+password: futstats
+port: 5432
+```
+
+### Run Migrations and Seeds
+
+```bash
+cd backend
+npm run db:migrate
+npm run db:seed
+```
+
+### Run the API
+
+Development mode:
+
+```bash
+cd backend
 npm run dev
 ```
 
-The API health check will be available at:
+Production-like mode:
+
+```bash
+cd backend
+npm start
+```
+
+Health check:
 
 ```text
 GET /health
@@ -58,6 +114,42 @@ Authenticated routes must use:
 
 ```text
 Authorization: Bearer <token>
+```
+
+### Available Scripts
+
+Run from `backend/`:
+
+```text
+npm run dev        start the API with nodemon
+npm start          start the API with node
+npm test           run Jest tests
+npm run db:migrate run Sequelize migrations
+npm run db:seed    run Sequelize seeders
+```
+
+### Backend Structure
+
+```text
+backend/
+  src/
+    config/
+    controllers/
+    database/
+      migrations/
+      seeders/
+    middlewares/
+    models/
+    repositories/
+    routes/
+    services/
+    utils/
+    app.js
+    server.js
+  tests/
+  docker-compose.yml
+  package.json
+  .env.example
 ```
 
 ### Team Routes
@@ -86,6 +178,7 @@ Suggested branches:
 main
 develop
 gustavo/project-setup
+gustavo/backend-setup-docs
 ```
 
 Commit messages should be written in English, for example:
@@ -93,4 +186,5 @@ Commit messages should be written in English, for example:
 ```text
 chore: create initial backend structure
 feat: add JWT authentication
+docs: add backend setup instructions
 ```
