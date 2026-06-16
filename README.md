@@ -60,6 +60,24 @@ Authenticated routes must use:
 Authorization: Bearer <token>
 ```
 
+### Team Routes
+
+Public routes:
+
+```text
+GET /teams
+GET /teams/:id
+```
+
+Private routes:
+
+```text
+POST /teams
+PUT /teams/:id
+DELETE /teams/:id
+PATCH /teams/:id/deactivate
+```
+
 ## Git Workflow
 
 Suggested branches:
