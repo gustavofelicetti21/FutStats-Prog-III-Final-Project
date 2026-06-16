@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const env = require('../config/env');
 const AppError = require('../utils/AppError');
 
 class AuthService {
@@ -30,9 +31,9 @@ class AuthService {
         id: user.id,
         email: user.email,
       },
-      process.env.JWT_SECRET || 'change_me',
+      env.jwt.secret,
       {
-        expiresIn: process.env.JWT_EXPIRES_IN || '1d',
+        expiresIn: env.jwt.expiresIn,
       },
     );
 
