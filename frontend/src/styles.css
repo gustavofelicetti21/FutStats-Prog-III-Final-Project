@@ -233,6 +233,10 @@ button:disabled {
   margin-top: 18px;
 }
 
+.dashboard-actions {
+  margin-top: 18px;
+}
+
 .championship-card,
 .action-card {
   display: flex;

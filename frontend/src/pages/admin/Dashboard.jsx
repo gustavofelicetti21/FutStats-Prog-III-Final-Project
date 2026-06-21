@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import Loading from '../../components/Loading.jsx';
 import api, { getErrorMessage } from '../../services/api.js';
@@ -50,24 +51,49 @@ function Dashboard() {
       {error ? <div className="alert error">{error}</div> : null}
 
       {!loading && !error ? (
-        <div className="metric-row compact">
-          <article className="metric-card">
-            <span>{summary.teams}</span>
-            <p>Times cadastrados</p>
-          </article>
-          <article className="metric-card">
-            <span>{summary.activeTeams}</span>
-            <p>Times ativos</p>
-          </article>
-          <article className="metric-card">
-            <span>{summary.championships}</span>
-            <p>Campeonatos</p>
-          </article>
-          <article className="metric-card">
-            <span>{summary.activeChampionships}</span>
-            <p>Campeonatos ativos</p>
-          </article>
-        </div>
+        <>
+          <div className="metric-row compact">
+            <article className="metric-card">
+              <span>{summary.teams}</span>
+              <p>Times cadastrados</p>
+            </article>
+            <article className="metric-card">
+              <span>{summary.activeTeams}</span>
+              <p>Times ativos</p>
+            </article>
+            <article className="metric-card">
+              <span>{summary.championships}</span>
+              <p>Campeonatos</p>
+            </article>
+            <article className="metric-card">
+              <span>{summary.activeChampionships}</span>
+              <p>Campeonatos ativos</p>
+            </article>
+          </div>
+
+          <section className="content-section">
+            <div className="section-heading">
+              <div>
+                <h2>Atalhos</h2>
+                <p>Acesse as principais areas do painel.</p>
+              </div>
+            </div>
+            <div className="action-grid dashboard-actions">
+              <Link className="action-card" to="/admin/teams">
+                <strong>Times</strong>
+                <span>Cadastrar, editar e desativar times.</span>
+              </Link>
+              <Link className="action-card" to="/admin/championships">
+                <strong>Campeonatos</strong>
+                <span>Gerenciar temporadas e status.</span>
+              </Link>
+              <Link className="action-card" to="/admin/matches">
+                <strong>Partidas</strong>
+                <span>Acompanhar jogos quando a API estiver pronta.</span>
+              </Link>
+            </div>
+          </section>
+        </>
       ) : null}
     </section>
   );
