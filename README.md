@@ -13,7 +13,10 @@ developed in small feature branches with clear commits.
 - PostgreSQL
 - Docker Compose
 - Jest
-- React and Vite, planned for the frontend stage
+- React
+- Vite
+- Axios
+- React Router DOM
 
 ## Backend
 
@@ -168,6 +171,72 @@ POST /teams
 PUT /teams/:id
 DELETE /teams/:id
 PATCH /teams/:id/deactivate
+```
+
+## Frontend
+
+The frontend lives in `frontend/` and uses React with Vite.
+
+### Environment Variables
+
+Create a local environment file from the example:
+
+```bash
+cd frontend
+cp .env.example .env
+```
+
+Default API URL:
+
+```text
+VITE_API_URL=http://localhost:3000
+```
+
+### Install Dependencies
+
+```bash
+cd frontend
+npm install
+```
+
+### Run the Frontend
+
+Development mode:
+
+```bash
+cd frontend
+npm run dev
+```
+
+Build:
+
+```bash
+cd frontend
+npm run build
+```
+
+### Frontend Screens
+
+Public screens:
+
+```text
+/
+/championships
+/championships/:id
+/championships/:id/standings
+/championships/:id/rounds
+```
+
+Admin screens:
+
+```text
+/login
+/admin
+/admin/teams
+/admin/championships
+/admin/championships/:id/teams
+/admin/matches
+/admin/matches/:id/result
 ```
 
 ## Git Workflow
