@@ -87,12 +87,18 @@ function Teams() {
     }
   }
 
-  async function handleDelete(id) {
+  async function handleDelete(team) {
+    const confirmed = window.confirm(`Excluir o time ${team.name}?`);
+
+    if (!confirmed) {
+      return;
+    }
+
     setError('');
     setFeedback('');
 
     try {
-      await api.delete(`/teams/${id}`);
+      await api.delete(`/teams/${team.id}`);
       setFeedback('Time removido.');
       await loadTeams();
     } catch (requestError) {
@@ -100,12 +106,18 @@ function Teams() {
     }
   }
 
-  async function handleDeactivate(id) {
+  async function handleDeactivate(team) {
+    const confirmed = window.confirm(`Desativar o time ${team.name}?`);
+
+    if (!confirmed) {
+      return;
+    }
+
     setError('');
     setFeedback('');
 
     try {
-      await api.patch(`/teams/${id}/deactivate`);
+      await api.patch(`/teams/${team.id}/deactivate`);
       setFeedback('Time desativado.');
       await loadTeams();
     } catch (requestError) {
@@ -126,10 +138,10 @@ function Teams() {
           <button className="secondary-button" type="button" onClick={() => handleEdit(team)}>
             Editar
           </button>
-          <button className="ghost-button" type="button" onClick={() => handleDeactivate(team.id)}>
+          <button className="ghost-button" type="button" onClick={() => handleDeactivate(team)}>
             Desativar
           </button>
-          <button className="danger-button" type="button" onClick={() => handleDelete(team.id)}>
+          <button className="danger-button" type="button" onClick={() => handleDelete(team)}>
             Excluir
           </button>
         </div>

@@ -91,12 +91,18 @@ function ChampionshipsAdmin() {
     }
   }
 
-  async function handleDelete(id) {
+  async function handleDelete(championship) {
+    const confirmed = window.confirm(`Excluir o campeonato ${championship.name}?`);
+
+    if (!confirmed) {
+      return;
+    }
+
     setError('');
     setFeedback('');
 
     try {
-      await api.delete(`/championships/${id}`);
+      await api.delete(`/championships/${championship.id}`);
       setFeedback('Campeonato removido.');
       await loadChampionships();
     } catch (requestError) {
@@ -104,12 +110,18 @@ function ChampionshipsAdmin() {
     }
   }
 
-  async function handleDeactivate(id) {
+  async function handleDeactivate(championship) {
+    const confirmed = window.confirm(`Desativar o campeonato ${championship.name}?`);
+
+    if (!confirmed) {
+      return;
+    }
+
     setError('');
     setFeedback('');
 
     try {
-      await api.patch(`/championships/${id}/deactivate`);
+      await api.patch(`/championships/${championship.id}/deactivate`);
       setFeedback('Campeonato desativado.');
       await loadChampionships();
     } catch (requestError) {
@@ -143,14 +155,14 @@ function ChampionshipsAdmin() {
           <button
             className="ghost-button"
             type="button"
-            onClick={() => handleDeactivate(championship.id)}
+            onClick={() => handleDeactivate(championship)}
           >
             Desativar
           </button>
           <button
             className="danger-button"
             type="button"
-            onClick={() => handleDelete(championship.id)}
+            onClick={() => handleDelete(championship)}
           >
             Excluir
           </button>
