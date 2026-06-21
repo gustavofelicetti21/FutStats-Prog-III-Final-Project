@@ -574,6 +574,24 @@ tr:last-child td {
   padding: 20px;
 }
 
+.round-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.round-heading p {
+  margin: 6px 0 0;
+  color: #617064;
+}
+
+.round-heading span {
+  color: #617064;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 .match-list {
   display: grid;
   gap: 8px;
@@ -593,6 +611,11 @@ tr:last-child td {
 
 .match-row strong {
   text-align: center;
+}
+
+.compact-empty {
+  min-height: 44px;
+  margin-top: 14px;
 }
 
 @keyframes spin {
@@ -629,7 +652,8 @@ tr:last-child td {
   .header-content,
   .row-title,
   .detail-header,
-  .section-heading {
+  .section-heading,
+  .round-heading {
     align-items: stretch;
     flex-direction: column;
   }

@@ -33,6 +33,14 @@ function Rounds() {
     loadRounds();
   }, [id]);
 
+  function getRoundMatches(round) {
+    return round.matches || round.Matches || [];
+  }
+
+  function getTeamName(team, fallback) {
+    return team?.name || fallback || 'Time';
+  }
+
   return (
     <section className="site-shell page-stack">
       <div className="page-title row-title">
@@ -54,23 +62,37 @@ function Rounds() {
 
       {!loading && !error && rounds.length ? (
         <div className="round-list">
-          {rounds.map((round) => (
-            <article className="round-block" key={round.id}>
-              <h2>Rodada {round.number}</h2>
-              <p>{round.type === 'return_leg' ? 'Returno' : 'Turno'}</p>
-              <div className="match-list">
-                {(round.matches || []).map((match) => (
-                  <div className="match-row" key={match.id}>
-                    <span>{match.home_team?.name || match.home_team_id}</span>
-                    <strong>
-                      {match.home_goals} x {match.away_goals}
-                    </strong>
-                    <span>{match.away_team?.name || match.away_team_id}</span>
+          {rounds.map((round) => {
+            const matches = getRoundMatches(round);
+
+            return (
+              <article className="round-block" key={round.id}>
+                <div className="round-heading">
+                  <div>
+                    <h2>Rodada {round.number}</h2>
+                    <p>{round.type === 'return_leg' ? 'Returno' : 'Turno'}</p>
                   </div>
-                ))}
-              </div>
-            </article>
-          ))}
+                  <span>{matches.length} jogo{matches.length === 1 ? '' : 's'}</span>
+                </div>
+
+                {matches.length ? (
+                  <div className="match-list">
+                    {matches.map((match) => (
+                      <div className="match-row" key={match.id}>
+                        <span>{getTeamName(match.home_team || match.HomeTeam, match.home_team_id)}</span>
+                        <strong>
+                          {match.home_goals} x {match.away_goals}
+                        </strong>
+                        <span>{getTeamName(match.away_team || match.AwayTeam, match.away_team_id)}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty-state compact-empty">Nenhuma partida nesta rodada.</div>
+                )}
+              </article>
+            );
+          })}
         </div>
       ) : null}
     </section>
