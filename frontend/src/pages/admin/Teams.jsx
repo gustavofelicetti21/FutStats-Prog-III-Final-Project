@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import DataTable from '../../components/DataTable.jsx';
 import FormInput from '../../components/FormInput.jsx';
@@ -12,10 +12,18 @@ const initialForm = {
   acronym: '',
 };
 
+const statusOptions = [
+  { value: 'all', label: 'Todos' },
+  { value: 'active', label: 'Ativos' },
+  { value: 'deactivated', label: 'Inativos' },
+];
+
 function Teams() {
   const [teams, setTeams] = useState([]);
   const [formData, setFormData] = useState(initialForm);
   const [editingTeam, setEditingTeam] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -125,6 +133,20 @@ function Teams() {
     }
   }
 
+  const visibleTeams = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return teams.filter((team) => {
+      const matchesStatus = statusFilter === 'all' || team.status === statusFilter;
+      const matchesSearch = [team.name, team.city, team.acronym]
+        .join(' ')
+        .toLowerCase()
+        .includes(normalizedSearch);
+
+      return matchesStatus && matchesSearch;
+    });
+  }, [searchTerm, statusFilter, teams]);
+
   const columns = [
     { key: 'name', label: 'Nome' },
     { key: 'city', label: 'Cidade' },
@@ -158,7 +180,41 @@ function Teams() {
         </div>
 
         {loading ? <Loading /> : null}
-        {!loading ? <DataTable columns={columns} rows={teams} /> : null}
+        {!loading ? (
+          <>
+            <div className="toolbar-row">
+              <label className="search-field" htmlFor="team-search">
+                <span>Buscar time</span>
+                <input
+                  id="team-search"
+                  type="search"
+                  placeholder="Nome, cidade ou sigla"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                />
+              </label>
+
+              <div className="segmented-control" aria-label="Filtrar times">
+                {statusOptions.map((option) => (
+                  <button
+                    className={statusFilter === option.value ? 'selected' : ''}
+                    key={option.value}
+                    type="button"
+                    onClick={() => setStatusFilter(option.value)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+
+              <p className="result-count">
+                {visibleTeams.length} time{visibleTeams.length === 1 ? '' : 's'}
+              </p>
+            </div>
+
+            <DataTable columns={columns} rows={visibleTeams} />
+          </>
+        ) : null}
       </div>
 
       <aside className="side-panel">
