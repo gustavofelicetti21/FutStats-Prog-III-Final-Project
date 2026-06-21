@@ -5,6 +5,13 @@ import Loading from '../../components/Loading.jsx';
 import StatusBadge from '../../components/StatusBadge.jsx';
 import api, { getErrorMessage } from '../../services/api.js';
 
+const statusDescriptions = {
+  draft: 'Campeonato ainda em configuracao.',
+  active: 'Campeonato em andamento.',
+  finished: 'Campeonato encerrado.',
+  deactivated: 'Campeonato fora da area publica.',
+};
+
 function ChampionshipDetails() {
   const { id } = useParams();
   const [championship, setChampionship] = useState(null);
@@ -48,9 +55,24 @@ function ChampionshipDetails() {
         <div>
           <p className="eyebrow">Campeonato</p>
           <h1>{championship.name}</h1>
-          <p>Temporada {championship.season}</p>
+          <p>{statusDescriptions[championship.status] || 'Detalhes do campeonato.'}</p>
         </div>
         <StatusBadge status={championship.status} />
+      </div>
+
+      <div className="detail-summary">
+        <div>
+          <span>Temporada</span>
+          <strong>{championship.season}</strong>
+        </div>
+        <div>
+          <span>Status</span>
+          <strong>{championship.status}</strong>
+        </div>
+        <div>
+          <span>Consulta publica</span>
+          <strong>Disponivel</strong>
+        </div>
       </div>
 
       <div className="action-grid">

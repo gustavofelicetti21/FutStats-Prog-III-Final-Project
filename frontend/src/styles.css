@@ -200,6 +200,35 @@ button:disabled {
   gap: 16px;
 }
 
+.detail-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.detail-summary div {
+  min-height: 96px;
+  padding: 18px;
+  border: 1px solid #d8e1d1;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.detail-summary span {
+  display: block;
+  color: #617064;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.detail-summary strong {
+  display: block;
+  margin-top: 8px;
+  color: #15291b;
+  font-size: 1.2rem;
+}
+
 .section-heading + .championship-grid {
   margin-top: 18px;
 }
@@ -576,7 +605,8 @@ tr:last-child td {
   .admin-layout,
   .two-column,
   .metric-row,
-  .metric-row.compact {
+  .metric-row.compact,
+  .detail-summary {
     grid-template-columns: 1fr;
   }
 
