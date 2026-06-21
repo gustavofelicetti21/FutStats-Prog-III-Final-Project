@@ -20,9 +20,10 @@ class TeamService {
   }
 
   async create(data) {
-    this.validateRequiredFields(data);
+    const name = this.normalizeRequiredText(data.name, 'Name');
+    const city = this.normalizeRequiredText(data.city, 'City');
+    const acronym = this.normalizeRequiredText(data.acronym, 'Acronym').toUpperCase();
 
-    const acronym = data.acronym.trim().toUpperCase();
     const existingTeam = await this.teamRepository.findByAcronym(acronym);
 
     if (existingTeam) {
@@ -30,8 +31,8 @@ class TeamService {
     }
 
     return this.teamRepository.create({
-      name: data.name.trim(),
-      city: data.city.trim(),
+      name,
+      city,
       acronym,
       status: 'active',
     });
@@ -41,16 +42,16 @@ class TeamService {
     const team = await this.getById(id);
     const updateData = {};
 
-    if (data.name) {
-      updateData.name = data.name.trim();
+    if (data.name !== undefined) {
+      updateData.name = this.normalizeRequiredText(data.name, 'Name');
     }
 
-    if (data.city) {
-      updateData.city = data.city.trim();
+    if (data.city !== undefined) {
+      updateData.city = this.normalizeRequiredText(data.city, 'City');
     }
 
-    if (data.acronym) {
-      const acronym = data.acronym.trim().toUpperCase();
+    if (data.acronym !== undefined) {
+      const acronym = this.normalizeRequiredText(data.acronym, 'Acronym').toUpperCase();
       const existingTeam = await this.teamRepository.findByAcronym(acronym);
 
       if (existingTeam && existingTeam.id !== team.id) {
@@ -60,7 +61,7 @@ class TeamService {
       updateData.acronym = acronym;
     }
 
-    if (data.status) {
+    if (data.status !== undefined) {
       this.validateStatus(data.status);
       updateData.status = data.status;
     }
@@ -82,10 +83,18 @@ class TeamService {
     });
   }
 
-  validateRequiredFields(data) {
-    if (!data.name || !data.city || !data.acronym) {
-      throw new AppError('Name, city and acronym are required');
+  normalizeRequiredText(value, fieldName) {
+    if (typeof value !== 'string') {
+      throw new AppError(`${fieldName} is required`);
     }
+
+    const normalizedValue = value.trim();
+
+    if (!normalizedValue) {
+      throw new AppError(`${fieldName} is required`);
+    }
+
+    return normalizedValue;
   }
 
   validateStatus(status) {
