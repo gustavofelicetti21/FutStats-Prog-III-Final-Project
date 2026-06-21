@@ -4,6 +4,8 @@ const ChampionshipTeamRepository = require('../repositories/ChampionshipTeamRepo
 const MatchRepository = require('../repositories/MatchRepository');
 const RoundRepository = require('../repositories/RoundRepository');
 
+const BYE_TEAM_ID = null;
+
 class RoundGeneratorService {
   constructor(
     championshipRepository = new ChampionshipRepository(),
@@ -82,10 +84,6 @@ class RoundGeneratorService {
       throw new AppError('Championship must have at least two teams to generate rounds');
     }
 
-    if (championshipTeams.length % 2 !== 0) {
-      throw new AppError('Bye week handling for odd number of teams will be implemented next');
-    }
-
     return championshipTeams.map((championshipTeam) => championshipTeam.team_id);
   }
 
@@ -114,9 +112,10 @@ class RoundGeneratorService {
 
   createFirstLegRounds(teamIds) {
     const rounds = [];
-    let rotatingTeamIds = [...teamIds];
-    const roundsCount = teamIds.length - 1;
-    const matchesPerRound = teamIds.length / 2;
+    const schedulableTeamIds = this.getSchedulableTeamIds(teamIds);
+    let rotatingTeamIds = [...schedulableTeamIds];
+    const roundsCount = schedulableTeamIds.length - 1;
+    const matchesPerRound = schedulableTeamIds.length / 2;
 
     for (let roundIndex = 0; roundIndex < roundsCount; roundIndex += 1) {
       const matches = [];
@@ -125,6 +124,10 @@ class RoundGeneratorService {
         const firstTeamId = rotatingTeamIds[matchIndex];
         const secondTeamId = rotatingTeamIds[rotatingTeamIds.length - 1 - matchIndex];
         const shouldInvertHomeTeam = roundIndex % 2 !== 0;
+
+        if (this.isByeMatch(firstTeamId, secondTeamId)) {
+          continue;
+        }
 
         matches.push({
           home_team_id: shouldInvertHomeTeam ? secondTeamId : firstTeamId,
@@ -142,6 +145,18 @@ class RoundGeneratorService {
     }
 
     return rounds;
+  }
+
+  getSchedulableTeamIds(teamIds) {
+    if (teamIds.length % 2 === 0) {
+      return teamIds;
+    }
+
+    return [...teamIds, BYE_TEAM_ID];
+  }
+
+  isByeMatch(firstTeamId, secondTeamId) {
+    return firstTeamId === BYE_TEAM_ID || secondTeamId === BYE_TEAM_ID;
   }
 
   rotateTeamIds(teamIds) {
