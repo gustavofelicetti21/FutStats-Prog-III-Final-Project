@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import DataTable from '../../components/DataTable.jsx';
@@ -13,10 +13,20 @@ const initialForm = {
   status: 'draft',
 };
 
+const statusOptions = [
+  { value: 'all', label: 'Todos' },
+  { value: 'draft', label: 'Rascunhos' },
+  { value: 'active', label: 'Ativos' },
+  { value: 'finished', label: 'Finalizados' },
+  { value: 'deactivated', label: 'Inativos' },
+];
+
 function ChampionshipsAdmin() {
   const [championships, setChampionships] = useState([]);
   const [formData, setFormData] = useState(initialForm);
   const [editingChampionship, setEditingChampionship] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -129,6 +139,20 @@ function ChampionshipsAdmin() {
     }
   }
 
+  const visibleChampionships = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return championships.filter((championship) => {
+      const matchesStatus = statusFilter === 'all' || championship.status === statusFilter;
+      const matchesSearch = [championship.name, championship.season]
+        .join(' ')
+        .toLowerCase()
+        .includes(normalizedSearch);
+
+      return matchesStatus && matchesSearch;
+    });
+  }, [championships, searchTerm, statusFilter]);
+
   const columns = [
     { key: 'name', label: 'Nome' },
     { key: 'season', label: 'Temporada' },
@@ -180,7 +204,42 @@ function ChampionshipsAdmin() {
         </div>
 
         {loading ? <Loading /> : null}
-        {!loading ? <DataTable columns={columns} rows={championships} /> : null}
+        {!loading ? (
+          <>
+            <div className="toolbar-row">
+              <label className="search-field" htmlFor="admin-championship-search">
+                <span>Buscar campeonato</span>
+                <input
+                  id="admin-championship-search"
+                  type="search"
+                  placeholder="Nome ou temporada"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                />
+              </label>
+
+              <div className="segmented-control" aria-label="Filtrar campeonatos">
+                {statusOptions.map((option) => (
+                  <button
+                    className={statusFilter === option.value ? 'selected' : ''}
+                    key={option.value}
+                    type="button"
+                    onClick={() => setStatusFilter(option.value)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+
+              <p className="result-count">
+                {visibleChampionships.length} campeonato
+                {visibleChampionships.length === 1 ? '' : 's'}
+              </p>
+            </div>
+
+            <DataTable columns={columns} rows={visibleChampionships} />
+          </>
+        ) : null}
       </div>
 
       <aside className="side-panel">
