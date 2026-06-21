@@ -1,8 +1,10 @@
 const ChampionshipService = require('../services/ChampionshipService');
 const ChampionshipTeamService = require('../services/ChampionshipTeamService');
+const RoundGeneratorService = require('../services/RoundGeneratorService');
 
 const championshipService = new ChampionshipService();
 const championshipTeamService = new ChampionshipTeamService();
+const roundGeneratorService = new RoundGeneratorService();
 
 class ChampionshipController {
   async index(request, response, next) {
@@ -84,6 +86,16 @@ class ChampionshipController {
       await championshipTeamService.removeTeam(request.params.id, request.params.teamId);
 
       return response.status(204).send();
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async generateRounds(request, response, next) {
+    try {
+      const result = await roundGeneratorService.generate(request.params.id);
+
+      return response.status(201).json(result);
     } catch (error) {
       return next(error);
     }
