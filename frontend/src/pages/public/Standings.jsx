@@ -34,7 +34,14 @@ function Standings() {
     loadStandings();
   }, [id]);
 
+  const tableRows = standings.map((row, index) => ({
+    ...row,
+    id: row.team_id || index + 1,
+    position: index + 1,
+  }));
+
   const columns = [
+    { key: 'position', label: '#' },
     { key: 'team_name', label: 'Time' },
     { key: 'points', label: 'Pts' },
     { key: 'played', label: 'J' },
@@ -52,6 +59,7 @@ function Standings() {
         <div>
           <p className="eyebrow">Classificacao</p>
           <h1>{championship?.name || 'Campeonato'}</h1>
+          <p>A tabela considera somente partidas finalizadas.</p>
         </div>
         <Link className="text-link" to={`/championships/${id}`}>
           Voltar
@@ -64,7 +72,7 @@ function Standings() {
       {!loading && !error ? (
         <DataTable
           columns={columns}
-          rows={standings}
+          rows={tableRows}
           emptyMessage="A classificacao sera exibida quando a rota estiver disponivel."
         />
       ) : null}
