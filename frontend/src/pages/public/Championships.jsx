@@ -5,9 +5,17 @@ import Loading from '../../components/Loading.jsx';
 import StatusBadge from '../../components/StatusBadge.jsx';
 import api, { getErrorMessage } from '../../services/api.js';
 
+const statusOptions = [
+  { value: 'all', label: 'Todos' },
+  { value: 'active', label: 'Ativos' },
+  { value: 'finished', label: 'Finalizados' },
+  { value: 'draft', label: 'Rascunhos' },
+];
+
 function Championships() {
   const [championships, setChampionships] = useState([]);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -27,18 +35,31 @@ function Championships() {
   }, []);
 
   const visibleChampionships = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
     return championships.filter((championship) => {
       if (championship.status === 'deactivated') {
         return false;
       }
 
       if (statusFilter === 'all') {
-        return true;
+        return matchesSearch(championship, normalizedSearch);
       }
 
-      return championship.status === statusFilter;
+      return championship.status === statusFilter && matchesSearch(championship, normalizedSearch);
     });
-  }, [championships, statusFilter]);
+  }, [championships, searchTerm, statusFilter]);
+
+  function matchesSearch(championship, normalizedSearch) {
+    if (!normalizedSearch) {
+      return true;
+    }
+
+    return [championship.name, championship.season]
+      .join(' ')
+      .toLowerCase()
+      .includes(normalizedSearch);
+  }
 
   return (
     <section className="site-shell page-stack">
@@ -48,17 +69,33 @@ function Championships() {
           <h1>Temporadas</h1>
         </div>
         <div className="segmented-control" aria-label="Filtrar campeonatos">
-          {['all', 'active', 'finished', 'draft'].map((status) => (
+          {statusOptions.map((option) => (
             <button
-              className={statusFilter === status ? 'selected' : ''}
-              key={status}
+              className={statusFilter === option.value ? 'selected' : ''}
+              key={option.value}
               type="button"
-              onClick={() => setStatusFilter(status)}
+              onClick={() => setStatusFilter(option.value)}
             >
-              {status === 'all' ? 'Todos' : status}
+              {option.label}
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="toolbar-row">
+        <label className="search-field" htmlFor="championship-search">
+          <span>Buscar campeonato</span>
+          <input
+            id="championship-search"
+            type="search"
+            placeholder="Nome ou temporada"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+          />
+        </label>
+        <p className="result-count">
+          {visibleChampionships.length} campeonato{visibleChampionships.length === 1 ? '' : 's'}
+        </p>
       </div>
 
       {loading ? <Loading /> : null}

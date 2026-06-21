@@ -301,6 +301,36 @@ button:disabled {
   color: #ffffff;
 }
 
+.toolbar-row {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.search-field {
+  display: grid;
+  width: min(420px, 100%);
+  gap: 8px;
+  color: #263428;
+  font-weight: 800;
+}
+
+.search-field input {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #cbd7c5;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #172018;
+}
+
+.result-count {
+  margin: 0;
+  color: #617064;
+  font-weight: 800;
+}
+
 .text-link {
   color: #1f6f3d;
   font-weight: 800;
@@ -584,6 +614,11 @@ tr:last-child td {
 
   .segmented-control {
     overflow-x: auto;
+  }
+
+  .toolbar-row {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .page-title h1,
