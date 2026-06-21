@@ -17,7 +17,21 @@ api.interceptors.request.use((config) => {
 });
 
 export function getErrorMessage(error) {
-  return error.response?.data?.message || 'Nao foi possivel concluir a operacao.';
+  if (!error.response) {
+    return 'Nao consegui conectar na API. Confira se o backend esta rodando.';
+  }
+
+  const message = error.response.data?.message;
+
+  if (message === 'Invalid credentials') {
+    return 'Email ou senha invalidos.';
+  }
+
+  if (message === 'Email and password are required') {
+    return 'Informe email e senha.';
+  }
+
+  return message || 'Nao foi possivel concluir a operacao.';
 }
 
 export default api;
