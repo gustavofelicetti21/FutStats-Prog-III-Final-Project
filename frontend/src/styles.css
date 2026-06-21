@@ -532,6 +532,10 @@ button:disabled {
   align-items: start;
 }
 
+.two-column > * {
+  min-width: 0;
+}
+
 .side-panel {
   position: sticky;
   top: 24px;
@@ -539,6 +543,8 @@ button:disabled {
 }
 
 .table-wrap {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
   border: 1px solid #dde5d6;
   border-radius: 8px;
@@ -638,17 +644,57 @@ tr:last-child td {
   }
 
   .admin-sidebar {
-    position: static;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
     height: auto;
-    gap: 18px;
+    gap: 12px;
+    padding: 14px 16px;
+    border-right: 0;
+    border-bottom: 1px solid #d8e1d1;
+  }
+
+  .admin-sidebar > div {
+    min-width: 0;
+  }
+
+  .admin-user {
+    margin-top: 2px;
+    font-size: 0.9rem;
+  }
+
+  .admin-sidebar > .ghost-button {
+    min-width: 72px;
+    min-height: 36px;
+    padding: 0 12px;
   }
 
   .admin-main {
     padding: 0 16px;
   }
 
+  .admin-nav {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    margin-top: 0;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .admin-nav a {
+    flex: 0 0 auto;
+    min-width: max-content;
+  }
+
   .side-panel {
     position: static;
+  }
+
+  .admin-page {
+    padding: 28px 0;
   }
 }
 
@@ -682,5 +728,80 @@ tr:last-child td {
   .page-title h1,
   .detail-header h1 {
     font-size: 2.25rem;
+  }
+
+  .metric-card {
+    min-height: 96px;
+    padding: 18px;
+  }
+
+  .content-section,
+  .side-panel,
+  .login-panel,
+  .round-block {
+    padding: 18px;
+  }
+
+  .championship-card,
+  .action-card {
+    min-height: 112px;
+  }
+
+  .table-wrap {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+
+  table {
+    min-width: 0;
+  }
+
+  table,
+  thead,
+  tbody,
+  tr,
+  td {
+    display: block;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  tr {
+    overflow: hidden;
+    border: 1px solid #dde5d6;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 10px 22px rgba(30, 48, 34, 0.05);
+  }
+
+  td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 48px;
+    padding: 12px 14px;
+    text-align: right;
+  }
+
+  td::before {
+    content: attr(data-label);
+    color: #506055;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  td .table-actions {
+    justify-content: flex-end;
   }
 }
