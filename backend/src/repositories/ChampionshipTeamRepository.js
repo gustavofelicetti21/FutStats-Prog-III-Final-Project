@@ -1,9 +1,14 @@
-const { ChampionshipTeam } = require('../models');
+const { ChampionshipTeam, Team } = require('../models');
 
 class ChampionshipTeamRepository {
   async findByChampionshipId(championshipId) {
     return ChampionshipTeam.findAll({
       where: { championship_id: championshipId },
+      include: [
+        {
+          model: Team,
+        },
+      ],
       order: [['team_id', 'ASC']],
     });
   }

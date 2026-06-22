@@ -6,6 +6,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const championshipRoutes = Router();
 
 championshipRoutes.get('/championships', ChampionshipController.index);
+championshipRoutes.get('/championships/:id/standings', ChampionshipController.standings);
 championshipRoutes.get('/championships/:id', ChampionshipController.show);
 
 championshipRoutes.post('/championships', authMiddleware, ChampionshipController.create);
