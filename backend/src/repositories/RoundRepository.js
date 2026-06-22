@@ -1,4 +1,4 @@
-const { Round } = require('../models');
+const { Match, Round, Team } = require('../models');
 
 class RoundRepository {
   async findAll() {
@@ -17,6 +17,21 @@ class RoundRepository {
   async findByChampionshipId(championshipId) {
     return Round.findAll({
       where: { championship_id: championshipId },
+      include: [
+        {
+          model: Match,
+          include: [
+            {
+              model: Team,
+              as: 'HomeTeam',
+            },
+            {
+              model: Team,
+              as: 'AwayTeam',
+            },
+          ],
+        },
+      ],
       order: [['number', 'ASC']],
     });
   }

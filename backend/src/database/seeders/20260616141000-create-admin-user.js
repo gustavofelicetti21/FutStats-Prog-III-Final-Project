@@ -7,15 +7,22 @@ module.exports = {
     const passwordHash = await bcrypt.hash('admin123', 8);
     const now = new Date();
 
-    await queryInterface.bulkInsert('users', [
+    await queryInterface.sequelize.query(
+      `
+        INSERT INTO users (name, email, password_hash, created_at, updated_at)
+        VALUES (:name, :email, :passwordHash, :createdAt, :updatedAt)
+        ON CONFLICT (email) DO NOTHING
+      `,
       {
-        name: 'FutStats Admin',
-        email: 'admin@futstats.com',
-        password_hash: passwordHash,
-        created_at: now,
-        updated_at: now,
+        replacements: {
+          name: 'FutStats Admin',
+          email: 'admin@futstats.com',
+          passwordHash,
+          createdAt: now,
+          updatedAt: now,
+        },
       },
-    ]);
+    );
   },
 
   async down(queryInterface) {

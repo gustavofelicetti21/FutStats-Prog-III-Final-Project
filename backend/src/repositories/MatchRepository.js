@@ -3,6 +3,16 @@ const { Match, Team } = require('../models');
 class MatchRepository {
   async findAll() {
     return Match.findAll({
+      include: [
+        {
+          model: Team,
+          as: 'HomeTeam',
+        },
+        {
+          model: Team,
+          as: 'AwayTeam',
+        },
+      ],
       order: [
         ['round_id', 'ASC'],
         ['id', 'ASC'],
@@ -11,7 +21,18 @@ class MatchRepository {
   }
 
   async findById(id) {
-    return Match.findByPk(id);
+    return Match.findByPk(id, {
+      include: [
+        {
+          model: Team,
+          as: 'HomeTeam',
+        },
+        {
+          model: Team,
+          as: 'AwayTeam',
+        },
+      ],
+    });
   }
 
   async findByChampionshipId(championshipId) {
