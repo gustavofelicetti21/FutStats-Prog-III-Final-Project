@@ -37,6 +37,16 @@ class ChampionshipTeamService {
     });
   }
 
+  async listTeams(championshipId) {
+    const championship = await this.championshipRepository.findById(championshipId);
+
+    if (!championship) {
+      throw new AppError('Championship not found', 404);
+    }
+
+    return this.championshipTeamRepository.findByChampionshipId(championship.id);
+  }
+
   async removeTeam(championshipId, teamId) {
     const championship = await this.getDraftChampionship(championshipId);
     const team = await this.getTeam(teamId);

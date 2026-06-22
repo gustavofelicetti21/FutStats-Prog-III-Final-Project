@@ -41,6 +41,10 @@ function Rounds() {
     return team?.name || fallback || 'Time';
   }
 
+  function getRoundTypeLabel(type) {
+    return type === 'second_leg' || type === 'return_leg' ? 'Returno' : 'Turno';
+  }
+
   return (
     <section className="site-shell page-stack">
       <div className="page-title row-title">
@@ -70,7 +74,7 @@ function Rounds() {
                 <div className="round-heading">
                   <div>
                     <h2>Rodada {round.number}</h2>
-                    <p>{round.type === 'return_leg' ? 'Returno' : 'Turno'}</p>
+                    <p>{getRoundTypeLabel(round.type)}</p>
                   </div>
                   <span>{matches.length} jogo{matches.length === 1 ? '' : 's'}</span>
                 </div>

@@ -37,7 +37,7 @@ function Standings() {
   const tableRows = standings.map((row, index) => ({
     ...row,
     id: row.team_id || index + 1,
-    position: index + 1,
+    position: row.position || index + 1,
   }));
 
   const columns = [
@@ -73,6 +73,7 @@ function Standings() {
         <DataTable
           columns={columns}
           rows={tableRows}
+          title="Tabela de classificacao"
           emptyMessage="A classificacao sera exibida quando a rota estiver disponivel."
         />
       ) : null}

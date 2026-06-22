@@ -13,7 +13,7 @@ function ProtectedRoute() {
   return (
     <div className="admin-layout">
       <AdminNavbar />
-      <main className="admin-main">
+      <main className="admin-main" id="main-content">
         <Outlet />
       </main>
     </div>

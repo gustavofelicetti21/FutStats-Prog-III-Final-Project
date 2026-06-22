@@ -160,8 +160,13 @@ function Teams() {
           <button className="secondary-button" type="button" onClick={() => handleEdit(team)}>
             Editar
           </button>
-          <button className="ghost-button" type="button" onClick={() => handleDeactivate(team)}>
-            Desativar
+          <button
+            className="ghost-button"
+            disabled={team.status === 'deactivated'}
+            type="button"
+            onClick={() => handleDeactivate(team)}
+          >
+            {team.status === 'deactivated' ? 'Inativo' : 'Desativar'}
           </button>
           <button className="danger-button" type="button" onClick={() => handleDelete(team)}>
             Excluir
@@ -212,7 +217,7 @@ function Teams() {
               </p>
             </div>
 
-            <DataTable columns={columns} rows={visibleTeams} />
+            <DataTable columns={columns} rows={visibleTeams} title="Times cadastrados" />
           </>
         ) : null}
       </div>
@@ -224,6 +229,7 @@ function Teams() {
             id="team-name"
             label="Nome"
             name="name"
+            autoComplete="off"
             value={formData.name}
             onChange={handleChange}
             required
@@ -232,6 +238,7 @@ function Teams() {
             id="team-city"
             label="Cidade"
             name="city"
+            autoComplete="address-level2"
             value={formData.city}
             onChange={handleChange}
             required
@@ -240,14 +247,24 @@ function Teams() {
             id="team-acronym"
             label="Sigla"
             name="acronym"
+            autoComplete="off"
+            hint="Use uma sigla curta, como FLA ou CFC."
             value={formData.acronym}
             onChange={handleChange}
             maxLength="5"
             required
           />
 
-          {error ? <div className="alert error">{error}</div> : null}
-          {feedback ? <div className="alert success">{feedback}</div> : null}
+          {error ? (
+            <div aria-live="assertive" className="alert error" role="alert">
+              {error}
+            </div>
+          ) : null}
+          {feedback ? (
+            <div aria-live="polite" className="alert success" role="status">
+              {feedback}
+            </div>
+          ) : null}
 
           <div className="button-row">
             <button className="primary-button" type="submit" disabled={saving}>

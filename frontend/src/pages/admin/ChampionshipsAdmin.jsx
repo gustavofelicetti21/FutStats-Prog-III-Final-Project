@@ -139,6 +139,25 @@ function ChampionshipsAdmin() {
     }
   }
 
+  async function handleGenerateRounds(championship) {
+    const confirmed = window.confirm(`Gerar rodadas para ${championship.name}?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    setError('');
+    setFeedback('');
+
+    try {
+      await api.post(`/championships/${championship.id}/generate-rounds`);
+      setFeedback('Rodadas geradas.');
+      await loadChampionships();
+    } catch (requestError) {
+      setError(getErrorMessage(requestError));
+    }
+  }
+
   const visibleChampionships = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
 
@@ -171,6 +190,14 @@ function ChampionshipsAdmin() {
           </Link>
           <button
             className="secondary-button"
+            disabled={championship.status !== 'draft'}
+            type="button"
+            onClick={() => handleGenerateRounds(championship)}
+          >
+            Rodadas
+          </button>
+          <button
+            className="secondary-button"
             type="button"
             onClick={() => handleEdit(championship)}
           >
@@ -178,10 +205,11 @@ function ChampionshipsAdmin() {
           </button>
           <button
             className="ghost-button"
+            disabled={championship.status === 'deactivated'}
             type="button"
             onClick={() => handleDeactivate(championship)}
           >
-            Desativar
+            {championship.status === 'deactivated' ? 'Inativo' : 'Desativar'}
           </button>
           <button
             className="danger-button"
@@ -237,7 +265,11 @@ function ChampionshipsAdmin() {
               </p>
             </div>
 
-            <DataTable columns={columns} rows={visibleChampionships} />
+            <DataTable
+              columns={columns}
+              rows={visibleChampionships}
+              title="Campeonatos cadastrados"
+            />
           </>
         ) : null}
       </div>
@@ -249,6 +281,7 @@ function ChampionshipsAdmin() {
             id="championship-name"
             label="Nome"
             name="name"
+            autoComplete="off"
             value={formData.name}
             onChange={handleChange}
             required
@@ -257,6 +290,8 @@ function ChampionshipsAdmin() {
             id="championship-season"
             label="Temporada"
             name="season"
+            autoComplete="off"
+            hint="Exemplos: 2026, 2026/1 ou Temporada 2026."
             value={formData.season}
             onChange={handleChange}
             required
@@ -278,8 +313,16 @@ function ChampionshipsAdmin() {
             </label>
           ) : null}
 
-          {error ? <div className="alert error">{error}</div> : null}
-          {feedback ? <div className="alert success">{feedback}</div> : null}
+          {error ? (
+            <div aria-live="assertive" className="alert error" role="alert">
+              {error}
+            </div>
+          ) : null}
+          {feedback ? (
+            <div aria-live="polite" className="alert success" role="status">
+              {feedback}
+            </div>
+          ) : null}
 
           <div className="button-row">
             <button className="primary-button" type="submit" disabled={saving}>

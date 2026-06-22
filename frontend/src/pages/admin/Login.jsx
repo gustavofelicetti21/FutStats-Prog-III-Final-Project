@@ -49,6 +49,7 @@ function Login() {
         <div className="page-title">
           <p className="eyebrow">Area administrativa</p>
           <h1>Entrar no FutStats</h1>
+          <p>Use sua conta de administrador para gerenciar times e campeonatos.</p>
         </div>
 
         <form className="form-stack" onSubmit={handleSubmit}>
@@ -57,6 +58,7 @@ function Login() {
             label="Email"
             name="email"
             type="email"
+            autoComplete="email"
             value={formData.email}
             onChange={handleChange}
             required
@@ -66,12 +68,17 @@ function Login() {
             label="Senha"
             name="password"
             type="password"
+            autoComplete="current-password"
             value={formData.password}
             onChange={handleChange}
             required
           />
 
-          {error ? <div className="alert error">{error}</div> : null}
+          {error ? (
+            <div aria-live="assertive" className="alert error" role="alert">
+              {error}
+            </div>
+          ) : null}
 
           <button className="primary-button" type="submit" disabled={loading}>
             {loading ? 'Entrando...' : 'Entrar'}

@@ -13,6 +13,9 @@ function AdminNavbar() {
 
   return (
     <aside className="admin-sidebar">
+      <a className="skip-link" href="#main-content">
+        Ir para conteudo
+      </a>
       <div>
         <NavLink className="brand admin-brand" to="/admin">
           FutStats

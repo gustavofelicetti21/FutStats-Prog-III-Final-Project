@@ -1,11 +1,15 @@
-function DataTable({ columns, rows, emptyMessage = 'Nenhum registro encontrado.' }) {
+function DataTable({ columns, rows, emptyMessage = 'Nenhum registro encontrado.', title }) {
   if (!rows.length) {
-    return <div className="empty-state">{emptyMessage}</div>;
+    return (
+      <div className="empty-state" role="status">
+        {emptyMessage}
+      </div>
+    );
   }
 
   return (
     <div className="table-wrap">
-      <table>
+      <table aria-label={title}>
         <thead>
           <tr>
             {columns.map((column) => (
