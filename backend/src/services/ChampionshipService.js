@@ -1,7 +1,8 @@
 const AppError = require('../utils/AppError');
+const ChampionshipRepository = require('../repositories/ChampionshipRepository');
 
 class ChampionshipService {
-  constructor(championshipRepository) {
+  constructor(championshipRepository = new ChampionshipRepository()) {
     this.championshipRepository = championshipRepository;
   }
 
